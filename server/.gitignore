@@ -1,0 +1,13 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Compiled JS files
+dist/
+*.js
+*.js.map
+*.d.ts
+*.d.ts.map
+/src/generated/prisma
