@@ -3,7 +3,10 @@ node_modules/
 
 # Environment variables
 .env
-
+.env.*
+*.log
+coverage/
+.DS_Store
 # Compiled JS files
 dist/
 *.js
