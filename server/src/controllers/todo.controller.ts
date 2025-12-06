@@ -38,18 +38,32 @@ export const todoController = {
   // Get single todo (ensures ownership)
   getOne: async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).userId as number;
-      const todoId = Number(req.params.id);
+        const userId = (req as any).userId;
+        const idParam = req.params.id;
 
-      const todo = await todoService.findTodoByIdForUser(todoId, userId);
-      if (!todo) return res.status(404).json({ message: "Todo not found" });
+        if (!idParam) {
+        return res.status(400).json({ message: "Todo ID is required" });
+        }
 
-      res.json({ todo });
-    } catch (err) {
-      console.error("Get todo error:", err);
-      res.status(500).json({ message: "Server error", error: (err as any).message || err });
+        const todoId = Number(idParam);
+
+        if (isNaN(todoId)) {
+        return res.status(400).json({ message: "Todo ID must be a number" });
+        }
+
+        const todo = await todoService.findTodoByIdForUser(todoId, userId);
+
+        if (!todo) {
+        return res.status(404).json({ message: "Todo not found" });
+        }
+
+        res.json({ todo });
+    } catch (err: any) {
+        console.error("Get todo error:", err);
+        res.status(500).json({ message: "Server error", error: err.message });
     }
-  },
+    },
+
 
   // Update todo (only allowed fields)
   update: async (req: Request, res: Response) => {
