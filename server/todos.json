@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Buy groceries",
+    "description": "Milk, eggs, bread",
+    "status": "PENDING"
+  },
+  {
+    "title": "Finish backend project",
+    "description": "Complete LuckyBeard challenge",
+    "status": "IN_PROGRESS"
+  },
+  {
+    "title": "Gym",
+    "description": "Leg day workout",
+    "status": "DONE"
+  }
+]
