@@ -2,7 +2,7 @@ import { Router } from "express";
 import { healthController } from "../controllers/health.controller.js";
 
 import authRoutes from "./auth.routes.js";
-import todosRoutes from "../routes/todo.routes.ts";
+import todosRoutes from "./todo.routes.js";
 
 const router = Router();
 
