@@ -23,10 +23,13 @@ export const todoService = {
 
   // find a todo by id but only if it belongs to user
   findTodoByIdForUser: async (todoId: number, userId: number) => {
+    if (!todoId || isNaN(todoId)) return null;
+
     return prisma.todo.findFirst({
-      where: { id: todoId, userId },
+        where: { id: todoId, userId },
     });
-  },
+    },
+
 
   // update a todo for a user
   updateTodoForUser: async (
@@ -72,6 +75,53 @@ export const todoService = {
       data,
       skipDuplicates: true,
     });
-  }
+  },
 
+    getAnalyticsForUser: async (userId: number) => {
+    const pending = await prisma.todo.count({
+      where: { userId, status: "PENDING" },
+    });
+
+    const inProgress = await prisma.todo.count({
+      where: { userId, status: "IN_PROGRESS" },
+    });
+
+    const done = await prisma.todo.count({
+      where: { userId, status: "DONE" },
+    });
+
+    const deleted = await prisma.todo.count({
+      where: { userId, status: "DELETED" },
+    });
+
+    // Optional: Completed per day (last 7 days)
+    const rawTimeline = await prisma.$queryRawUnsafe(`
+      SELECT 
+        DATE("updatedAt") as day,
+        COUNT(*) as completed
+      FROM "Todo"
+      WHERE "userId" = ${userId}
+      AND status = 'DONE'
+      GROUP BY DATE("updatedAt")
+      ORDER BY day DESC
+      LIMIT 7;
+    `);
+
+    // $queryRawUnsafe may return BigInt for numeric aggregates; convert to plain JS types
+    const timeline = (rawTimeline as any[]).map((row: any) => ({
+      day: row.day instanceof Date ? row.day.toISOString().split("T")[0] : String(row.day),
+      completed: typeof row.completed === "bigint" ? Number(row.completed) : Number(row.completed)
+    }));
+
+    return {
+      totals: {
+        pending,
+        inProgress,
+        done,
+        deleted
+      },
+      timeline
+    };
+  }
+  
 };
