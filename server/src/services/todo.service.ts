@@ -58,4 +58,20 @@ export const todoService = {
     await prisma.todo.delete({ where: { id: todoId } });
     return true;
   },
+
+    bulkCreateTodos: async (userId: number, todos: { title: string; description?: string; status?: any }[]) => {
+    // Map todos and sanitize incoming data
+    const data = todos.map(t => ({
+      title: t.title,
+      description: t.description || null,
+      status: t.status || "PENDING",
+      userId
+    }));
+
+    return prisma.todo.createMany({
+      data,
+      skipDuplicates: true,
+    });
+  }
+
 };
