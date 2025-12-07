@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { todoService } from "../services/todo.service.ts";
+import { todoService } from "../services/todo.service.js";
 
 export const todoController = {
   // Create a todo
