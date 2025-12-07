@@ -31,6 +31,9 @@ model Todo {
   title       String
   description String?
   status      TodoStatus  @default(PENDING)
+  priority    String?
+  estimatedTimeMinutes Int?      // Optional estimated time
+  subtasks             Json?     // Store subtasks as JSON
   userId      Int
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime    @default(now())
