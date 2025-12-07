@@ -2,12 +2,23 @@ import { prisma } from "../config/prisma.js";
 import type { TodoStatus } from "@prisma/client";
 
 export const todoService = {
-  // create a todo associated with a user
-  createTodo: async (data: { title: string; description?: string; userId: number }) => {
+  createTodo: async (data: {
+    title: string;
+    description?: string;
+    status?: TodoStatus;
+    priority?: string;
+    estimatedTimeMinutes?: number;
+    subtasks?: any;
+    userId: number;
+  }) => {
     return prisma.todo.create({
       data: {
         title: data.title,
         description: data.description,
+        status: data.status || "PENDING",
+        priority: data.priority || null,
+        estimatedTimeMinutes: data.estimatedTimeMinutes || null,
+        subtasks: data.subtasks || null,
         userId: data.userId,
       },
     });
