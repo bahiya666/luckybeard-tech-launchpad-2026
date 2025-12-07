@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 // All routes
-app.use("/api", routes);
 app.use("/api/auth", authRoutes);
 
 // Error handler (last)
