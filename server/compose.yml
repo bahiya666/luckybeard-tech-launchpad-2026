@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: luckybeard_api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://postgres:luckyB123@db:5432/luckybeard?schema=public"
+      PORT: 3000
+      JWT_SECRET: "your-secret"
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+
+  db:
+    image: postgres:15
+    container_name: luckybeard_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: luckyB123
+      POSTGRES_DB: luckybeard
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
