@@ -12,8 +12,7 @@
     "outDir": "dist",
     "declaration": true,
     "sourceMap": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": false
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

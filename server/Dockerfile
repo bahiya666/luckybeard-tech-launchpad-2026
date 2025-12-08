@@ -7,10 +7,8 @@ WORKDIR /app
 # Install openssl for Prisma + postgres client for wait-for-db
 RUN apk add --no-cache openssl postgresql-client
 
-# Copy package files
+# Copy package files and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
 # Copy server code
@@ -28,5 +26,5 @@ RUN chmod +x start.sh wait-for-db.sh
 # Expose API port
 EXPOSE 3000
 
-# Start server through wait-for-db.sh
-CMD ["sh", "/app/wait-for-db.sh", "db", "sh", "/app/start.sh"]
+# Start server through start.sh
+CMD ["sh", "/app/start.sh"]
