@@ -1,11 +1,15 @@
 #!/bin/sh
-set -e
 
 # Wait for database
-./wait-for-db.sh db
+until pg_isready -h db -p 5432 -U "postgres"; do
+  echo "Waiting for database at db:5432..."
+  sleep 2
+done
 
-# Run Prisma migrations
-npx prisma migrate deploy
+echo "Database is ready!"
 
-# Start Node server
-exec npm start
+# Apply database schema
+npx prisma db push --accept-data-loss
+
+# Start the server
+node dist/server.js
