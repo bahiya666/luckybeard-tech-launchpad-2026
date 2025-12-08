@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../src/app.js';
-import { prisma } from '../src/config/prisma.js';
+import { prisma } from './setup.js';
 import { hashPassword } from '../src/utils/auth.utils.js';
 
 describe('File Upload Endpoints', () => {
@@ -8,9 +8,6 @@ describe('File Upload Endpoints', () => {
   let userId: number;
 
   beforeEach(async () => {
-    await prisma.todo.deleteMany();
-    await prisma.user.deleteMany();
-
     const user = await prisma.user.create({
       data: {
         email: 'upload@example.com',
@@ -31,7 +28,6 @@ describe('File Upload Endpoints', () => {
 
     authToken = login.body.token;
   });
-
   describe('POST /api/todos/upload', () => {
     const csvContent = `title,description,status
 Todo 1,Description 1,PENDING

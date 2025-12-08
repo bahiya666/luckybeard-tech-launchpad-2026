@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../src/app.js';
-import { prisma } from '../src/config/prisma.js';
+import { prisma } from './setup.js';
 import { hashPassword } from '../src/utils/auth.utils.js';
 
 describe('Todo Endpoints', () => {
@@ -8,10 +8,6 @@ describe('Todo Endpoints', () => {
   let userId: number;
 
   beforeEach(async () => {
-    await prisma.todo.deleteMany();
-    await prisma.user.deleteMany();
-
-    // Create test user
     const user = await prisma.user.create({
       data: {
         email: 'todotest@example.com',
@@ -23,7 +19,6 @@ describe('Todo Endpoints', () => {
 
     userId = user.id;
 
-    // Login to get token
     const login = await request(app)
       .post('/api/auth/login')
       .send({
@@ -76,8 +71,8 @@ describe('Todo Endpoints', () => {
   });
 
   describe('GET /api/todos', () => {
-    beforeEach(async () => {
-      // Create some todos for the user
+    it('should list all todos for user', async () => {
+      // Create todos in the test itself
       await prisma.todo.createMany({
         data: [
           { title: 'Todo 1', userId },
@@ -85,19 +80,26 @@ describe('Todo Endpoints', () => {
           { title: 'Todo 3', userId, status: 'DONE' },
         ],
       });
-    });
 
-    it('should list all todos for user', async () => {
       const response = await request(app)
         .get('/api/todos')
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       expect(response.body.todos).toHaveLength(3);
-      expect(response.body.todos[0]).toHaveProperty('title', 'Todo 3'); // Sorted by createdAt desc
+      expect(response.body.todos[0]).toHaveProperty('title', 'Todo 3');
     });
 
     it('should not show other users todos', async () => {
+      // Create todos for current user
+      await prisma.todo.createMany({
+        data: [
+          { title: 'Todo 1', userId },
+          { title: 'Todo 2', userId, status: 'IN_PROGRESS' },
+          { title: 'Todo 3', userId, status: 'DONE' },
+        ],
+      });
+
       // Create another user
       const otherUser = await prisma.user.create({
         data: {
@@ -121,7 +123,6 @@ describe('Todo Endpoints', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      // Should only see own todos
       expect(response.body.todos).toHaveLength(3);
       response.body.todos.forEach((todo: any) => {
         expect(todo.userId).toBe(userId);
@@ -130,9 +131,7 @@ describe('Todo Endpoints', () => {
   });
 
   describe('GET /api/todos/:id', () => {
-    let todoId: number;
-
-    beforeEach(async () => {
+    it('should get a specific todo', async () => {
       const todo = await prisma.todo.create({
         data: {
           title: 'Specific Todo',
@@ -140,17 +139,14 @@ describe('Todo Endpoints', () => {
           userId,
         },
       });
-      todoId = todo.id;
-    });
 
-    it('should get a specific todo', async () => {
       const response = await request(app)
-        .get(`/api/todos/${todoId}`)
+        .get(`/api/todos/${todo.id}`)
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       expect(response.body.todo).toEqual({
-        id: todoId,
+        id: todo.id,
         title: 'Specific Todo',
         description: 'For get test',
         status: 'PENDING',
@@ -195,21 +191,16 @@ describe('Todo Endpoints', () => {
   });
 
   describe('PUT /api/todos/:id', () => {
-    let todoId: number;
-
-    beforeEach(async () => {
+    it('should update todo', async () => {
       const todo = await prisma.todo.create({
         data: {
           title: 'Update Test',
           userId,
         },
       });
-      todoId = todo.id;
-    });
 
-    it('should update todo', async () => {
       const response = await request(app)
-        .put(`/api/todos/${todoId}`)
+        .put(`/api/todos/${todo.id}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Updated Title',
@@ -232,27 +223,21 @@ describe('Todo Endpoints', () => {
   });
 
   describe('DELETE /api/todos/:id', () => {
-    let todoId: number;
-
-    beforeEach(async () => {
+    it('should delete todo', async () => {
       const todo = await prisma.todo.create({
         data: {
           title: 'Delete Test',
           userId,
         },
       });
-      todoId = todo.id;
-    });
 
-    it('should delete todo', async () => {
       await request(app)
-        .delete(`/api/todos/${todoId}`)
+        .delete(`/api/todos/${todo.id}`)
         .set('Authorization', `Bearer ${authToken}`)
         .expect(204);
 
-      // Verify deletion
       const deleted = await prisma.todo.findUnique({
-        where: { id: todoId },
+        where: { id: todo.id },
       });
       expect(deleted).toBeNull();
     });
@@ -266,8 +251,7 @@ describe('Todo Endpoints', () => {
   });
 
   describe('GET /api/todos/analytics', () => {
-    beforeEach(async () => {
-      // Create todos with different statuses
+    it('should return todo analytics', async () => {
       await prisma.todo.createMany({
         data: [
           { title: 'Pending 1', status: 'PENDING', userId },
@@ -279,9 +263,7 @@ describe('Todo Endpoints', () => {
           { title: 'Deleted', status: 'DELETED', userId },
         ],
       });
-    });
 
-    it('should return todo analytics', async () => {
       const response = await request(app)
         .get('/api/todos/analytics')
         .set('Authorization', `Bearer ${authToken}`)
