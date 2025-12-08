@@ -28,6 +28,12 @@ describe('File Upload Endpoints', () => {
 
     authToken = login.body.token;
   });
+
+  afterEach(async () => {
+    await prisma.todo.deleteMany();
+    await prisma.user.deleteMany();
+  });
+  
   describe('POST /api/todos/upload', () => {
     const csvContent = `title,description,status
 Todo 1,Description 1,PENDING

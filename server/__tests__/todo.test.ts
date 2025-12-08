@@ -29,6 +29,12 @@ describe('Todo Endpoints', () => {
     authToken = login.body.token;
   });
 
+  afterEach(async () => {
+    // Clean up after each test
+    await prisma.todo.deleteMany();
+    await prisma.user.deleteMany();
+  });
+
   describe('POST /api/todos', () => {
     it('should create a new todo', async () => {
       const response = await request(app)
