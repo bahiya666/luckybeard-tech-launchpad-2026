@@ -1,34 +1,12 @@
-version: '3.9'
-
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: luckybeard_api
-    restart: always
-    depends_on:
-      - db   # just list the service
-    environment:
-      DATABASE_URL: 'postgresql://postgres:luckyB123@db:5432/luckybeard?schema=public'
-      PORT: 3000
-      JWT_SECRET: 'your-secret'
-    ports:
-      - '3000:3000'
-    volumes:
-      - /app/node_modules
-    command: ["sh", "./wait-for-db.sh", "db", "node", "dist/server.js"]  # wait-for-db wraps your server start
-
   db:
     image: postgres:15
-    container_name: luckybeard_db
-    restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: luckyB123
+      POSTGRES_PASSWORD: Bhoosen123
       POSTGRES_DB: luckybeard
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -36,6 +14,19 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  luckybeard_api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL_TEST=${DATABASE_URL_TEST}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=${PORT}
+    ports:
+      - "3000:3000"
 
 volumes:
   postgres_data:
