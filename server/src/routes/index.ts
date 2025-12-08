@@ -1,13 +1,13 @@
-import { Router } from "express";
-import { healthController } from "../controllers/health.controller.js";
+// import { Router } from "express";
+// import { healthController } from "../controllers/health.controller.js";
 
-import authRoutes from "./auth.routes.js";
-import todosRoutes from "./todo.routes.js";
+// import authRoutes from "./auth.routes.js";
+// import todosRoutes from "./todo.routes.js";
 
-const router = Router();
+// const router = Router();
 
-router.get("/health", healthController.status);
-router.use("/auth", authRoutes);
-router.use("/todos", todosRoutes);
+// router.get("/health", healthController.status);
+// //router.use("/auth", authRoutes);
+// router.use("/todos", todosRoutes);
 
-export default router;
+// export default router;
