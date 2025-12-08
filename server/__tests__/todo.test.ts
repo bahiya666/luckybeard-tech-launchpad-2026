@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../src/app.js';
-import { prisma } from './setup.js';
+import { prisma } from '../src/config/prisma';
 import { hashPassword } from '../src/utils/auth.utils.js';
 
 describe('Todo Endpoints', () => {

@@ -56,13 +56,13 @@ Guidelines:
     throw new Error(`HuggingFace API error: ${await res.text()}`);
   }
 
-  let json = result.match(/\{[\s\S]*\}/);
-  if (!json) throw new Error("AI returned invalid JSON");
-  const data = JSON.parse(json[0]);
+  const responseJson = await res.json();
 
-  const content = data?.choices?.[0]?.message?.content;
+   const content = responseJson?.choices?.[0]?.message?.content;
 
-  return content || "";
+  if (!content) throw new Error("AI returned no content");
+
+  return content;
 }
 
 export const aiService = {

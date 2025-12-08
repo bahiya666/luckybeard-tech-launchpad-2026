@@ -4,7 +4,35 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:Bhoosen123@localhost:5432/luckybeard_test"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  surname   String
+  email     String    @unique
+  password  String
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  todos     Todo[]
+}
+
+model Todo {
+  id                   Int        @id @default(autoincrement())
+  title                String
+  description          String?
+  userId               Int
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  status               TodoStatus @default(PENDING)
+  estimatedTimeMinutes Int?
+  priority             String?
+  subtasks             Json?
+  user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 enum TodoStatus {
@@ -12,32 +40,4 @@ enum TodoStatus {
   IN_PROGRESS
   DONE
   DELETED
-}
-
-model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  surname    String
-  email      String   @unique
-  password   String
-  todos      Todo[]
-  deletedAt  DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Todo {
-  id          Int         @id @default(autoincrement())
-  title       String
-  description String?
-  status      TodoStatus  @default(PENDING)
-  priority    String?
-  estimatedTimeMinutes Int?      // Optional estimated time
-  subtasks             Json?     // Store subtasks as JSON
-  userId      Int
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  @@index([userId])
 }

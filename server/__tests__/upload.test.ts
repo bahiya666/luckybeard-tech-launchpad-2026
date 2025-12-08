@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../src/app.js';
-import { prisma } from './setup.js';
+import { prisma } from '../src/config/prisma';
 import { hashPassword } from '../src/utils/auth.utils.js';
 
 describe('File Upload Endpoints', () => {
@@ -33,7 +33,7 @@ describe('File Upload Endpoints', () => {
     await prisma.todo.deleteMany();
     await prisma.user.deleteMany();
   });
-  
+
   describe('POST /api/todos/upload', () => {
     const csvContent = `title,description,status
 Todo 1,Description 1,PENDING
