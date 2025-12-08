@@ -32,6 +32,11 @@ describe('AI Endpoints', () => {
     authToken = login.body.token;
   });
 
+  afterEach(async () => {
+    await prisma.todo.deleteMany();
+    await prisma.user.deleteMany();
+  });
+
   describe('POST /api/todos/generate', () => {
     it('should return 201 when generating todo', async () => {
       const response = await request(app)

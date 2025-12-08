@@ -83,7 +83,7 @@ export const coachService = {
     createdAt: true,
     updatedAt: true
   },
-  orderBy: { createdAt: "asc" }
+  orderBy: { createdAt: "desc" }
 });
 
 
