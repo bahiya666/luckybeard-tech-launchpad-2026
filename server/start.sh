@@ -13,3 +13,6 @@ npx prisma db push --accept-data-loss
 
 # Start the server
 node dist/server.js
+
+# Start the server
+node dist/server.js

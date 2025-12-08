@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./test.db"
+}
+
+// Copy your models from schema.prisma
+enum TodoStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+  DELETED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  surname   String
+  email     String   @unique
+  password  String
+  todos     Todo[]
+  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Todo {
+  id                  Int       @id @default(autoincrement())
+  title               String
+  description         String?
+  status              TodoStatus @default(PENDING)
+  priority            String?
+  estimatedTimeMinutes Int?
+  subtasks            Json?
+  userId              Int
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([userId])
+}

@@ -56,10 +56,13 @@ Guidelines:
     throw new Error(`HuggingFace API error: ${await res.text()}`);
   }
 
-  const data = await res.json();
-  const content = data?.choices?.[0]?.message?.content;
+  const responseJson = await res.json();
 
-  return content || "";
+   const content = responseJson?.choices?.[0]?.message?.content;
+
+  if (!content) throw new Error("AI returned no content");
+
+  return content;
 }
 
 export const aiService = {

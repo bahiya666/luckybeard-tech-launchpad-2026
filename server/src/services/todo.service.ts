@@ -28,7 +28,7 @@ export const todoService = {
   listTodosForUser: async (userId: number) => {
     return prisma.todo.findMany({
       where: { userId },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     });
   },
 
