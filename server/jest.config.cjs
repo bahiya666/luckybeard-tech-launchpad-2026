@@ -20,4 +20,5 @@ module.exports = {
   },
   testMatch: ['**/__tests__/**/*.test.ts'],
   verbose: true,
+  setupFilesAfterEnv: ["./__tests__/setup.ts"],
 };
