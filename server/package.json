@@ -10,9 +10,9 @@
     "prisma:deploy": "prisma migrate deploy",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-    "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
-    "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand --silent",
+    "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch --runInBand --silent",
+    "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --runInBand --silent"
   },
   "dependencies": {
     "axios": "^1.13.2",
