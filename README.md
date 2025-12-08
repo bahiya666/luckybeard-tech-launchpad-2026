@@ -55,8 +55,8 @@ Built using **Node.js**, **Express**, **Prisma**, **PostgreSQL**, and **Docker**
 ### 1. Clone the repo
 
 ```sh
-git clone https://github.com/<your-username>/<repo>.git
-cd <repo>/server
+git clone https://github.com/bahiya666/luckybeard-tech-launchpad-2026.git
+cd luckybeard-tech-launchpad-2026/server
 ```
 
 ### 2. Create your `.env` file
@@ -140,8 +140,8 @@ The project includes a Postman folder:
 
 ```
 postman/
-  luckybeard.postman_collection.json
-  luckybeard.postman_environment.json
+  Luckybeard Todo API.postman_collection.json  
+  Luckybeard Local.postman_environment.json
 ```
 
 Import both into Postman.
@@ -150,7 +150,7 @@ Set:
 
 ```
 baseUrl = http://localhost:3000
-token   = <leave empty until login>
+token   = <leave empty until login then add the login token>
 ```
 
 ---
@@ -158,8 +158,6 @@ token   = <leave empty until login>
 # Security Notes
 - `.env` **must NOT be committed**  
 - `env.example` contains non-sensitive placeholders  
-- If any secrets were committed, rotate them before submission  
-
 ---
 
 # Optional Testing (Jest + Supertest)
@@ -168,8 +166,11 @@ Tests can be added in:
 
 ```
 tests/
+  ai.test.ts
   auth.test.ts
+  health.test.ts
   todos.test.ts
+  upload.test.ts
 ```
 
 Run using:

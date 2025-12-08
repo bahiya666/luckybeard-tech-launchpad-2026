@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Wait for database
+# Wait for the database to be ready
 until pg_isready -h db -p 5432 -U "postgres"; do
   echo "Waiting for database at db:5432..."
   sleep 2
