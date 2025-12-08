@@ -1,13 +1,9 @@
 import request from 'supertest';
 import app from '../src/app.js';
-import { prisma } from '../src/config/prisma.js';
+import { prisma } from './setup.js'; 
 import { hashPassword } from '../src/utils/auth.utils.js';
 
 describe('Auth Endpoints', () => {
-  beforeEach(async () => {
-    await prisma.user.deleteMany();
-  });
-
   describe('POST /api/auth/register', () => {
     it('should register a new user', async () => {
       const response = await request(app)
