@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 host="$1"
 shift
@@ -9,4 +8,5 @@ until pg_isready -h "$host" -p 5432 -U "postgres"; do
   sleep 2
 done
 
+echo "Database is ready!"
 exec "$@"
